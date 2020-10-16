@@ -1,6 +1,7 @@
 import sqlalchemy
 from sqlalchemy import text
 import queries
+
 HOST = "reddwarf.cs.rit.edu"
 USER = "p320_13"
 PASS = "aiyohleiCahc2xahtee1"
@@ -13,9 +14,12 @@ class Connection:
         self.__engine = sqlalchemy.create_engine(db_name)
         self.__connection = self.__engine.connect()
 
-    def execute_query(query, **kwargs):
+    def execute_query(self, query, **kwargs):
         statement = text(query)
         return self.__connection.execute(query, kwargs)
 
 if __name__ == "__main__":
     connection = Connection(DATABASE)
+    res = connection.execute_query(queries.select_users)
+    for thing in res:
+        print(thing)

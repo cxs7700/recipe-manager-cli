@@ -16,10 +16,14 @@ class Connection:
 
     def execute_query(self, query, **kwargs):
         statement = text(query)
-        return self.__connection.execute(query, kwargs)
+        return self.__connection.execute(statement, kwargs)
 
 if __name__ == "__main__":
     connection = Connection(DATABASE)
     res = connection.execute_query(queries.select_users)
+    for thing in res:
+        print(thing)
+
+    res = connection.execute_query(queries.select_users_kwargs, uid=1)
     for thing in res:
         print(thing)

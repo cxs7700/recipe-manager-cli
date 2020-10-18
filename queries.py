@@ -11,5 +11,9 @@ select_recipes = """
 """
 
 select_ingredients = """
-    SELECT * FROM ingredients;
+    SELECT * FROM ingredients ORDER BY iid;
+"""
+
+select_requires = """
+    SELECT * FROM requires ORDER BY rid;
 """

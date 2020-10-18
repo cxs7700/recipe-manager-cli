@@ -30,7 +30,7 @@ def gen_data(requires, ingredients):
         else:
             steps[cur] = []
             while cur_rec:
-                r = random.randrange(1, 2) # 1 or 2 ingredients
+                r = random.randint(1, 2) # 1 or 2 ingredients
                 if r > len(cur_rec):
                     r = len(cur_rec)
 
@@ -42,6 +42,10 @@ def gen_data(requires, ingredients):
             cur = item[0]
     return steps
 
+def insert_steps(steps, connection):
+    for rid in steps.keys():
+        for i in range(len(steps[rid])):
+            connection.execute_query(queries.insert_step, rid=rid, number=(i+1), step=steps[rid][i])
 
 if __name__ == "__main__":
     connection = dbconnect.Connection(dbconnect.DATABASE)
@@ -50,4 +54,4 @@ if __name__ == "__main__":
     requires = [i for i in requires]
     ingredients = [i for i in ingredients]
     steps = gen_data(requires, ingredients)
-    print(steps)
+    insert_steps(steps, connection)

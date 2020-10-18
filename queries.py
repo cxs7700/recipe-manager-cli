@@ -17,3 +17,8 @@ select_ingredients = """
 select_requires = """
     SELECT * FROM requires ORDER BY rid;
 """
+
+insert_step = """
+    INSERT INTO steps (rid, number, direction)
+    VALUES (:rid, :number, :step);
+"""

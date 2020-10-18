@@ -21,6 +21,7 @@ class Connection:
 if __name__ == "__main__":
     connection = Connection(DATABASE)
     res = connection.execute_query(queries.select_users)
+    print(res)
     for thing in res:
         print(thing)
 

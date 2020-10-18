@@ -6,8 +6,8 @@ select_users_kwargs = """
     SELECT * FROM users
     WHERE users.uid = :uid;
 """
-select_recipies = """
-    SELECT * FROM recipies;
+select_recipes = """
+    SELECT * FROM recipes;
 """
 
 select_ingredients = """

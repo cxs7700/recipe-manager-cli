@@ -21,13 +21,12 @@ sentences = {
 # recipes and ingredients will be recieved as a list of tuples, or as
 # a sqlalchemy object
 def gen_data(requires, ingredients):
+    requires.append(None) # this guarentees the last recipie is accounted for
     steps = {}
     cur = requires[0][0] # initial rid
     cur_rec = []
     for item in requires:
-        if item[0] == cur:
-            cur_rec.append(item[1])
-        else:
+        if not item or item[0] != cur:
             steps[cur] = []
             while cur_rec:
                 r = random.randint(1, 2) # 1 or 2 ingredients
@@ -39,6 +38,8 @@ def gen_data(requires, ingredients):
                 ings = tuple(ings)
                 step = step % ings
                 steps[cur].append(step)
+        if item: # only last item will be None
+            cur_rec.append(item[1])
             cur = item[0]
     return steps
 
@@ -52,6 +53,8 @@ if __name__ == "__main__":
     requires = connection.execute_query(queries.select_requires) # ordered on rid
     ingredients = connection.execute_query(queries.select_ingredients) # ordered on iid
     requires = [i for i in requires]
+    print(len(requires))
     ingredients = [i for i in ingredients]
     steps = gen_data(requires, ingredients)
+    print(len(steps))
     insert_steps(steps, connection)

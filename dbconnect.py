@@ -16,7 +16,12 @@ class Connection:
 
     def execute_query(self, query, **kwargs):
         statement = text(query)
-        return self.__connection.execute(statement, kwargs)
+        try:
+            ret = self.__connection.execute(statement, kwargs)
+        except:
+            ret = None
+
+        return ret
 
 if __name__ == "__main__":
     connection = Connection(DATABASE)
@@ -25,6 +30,6 @@ if __name__ == "__main__":
     for thing in res:
         print(thing)
 
-    res = connection.execute_query(queries.select_users_kwargs, uid=1)
+    res = connection.execute_query(queries.select_users_kwargs, uid='a')
     for thing in res:
         print(thing)

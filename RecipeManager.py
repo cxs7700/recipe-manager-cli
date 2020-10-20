@@ -1,25 +1,59 @@
-print("Welcome to Recipe Manager")
 
-print("Here are the commands that you can use")
+import queries
+import dbconnect
 
-print("1. Store an ingredient in refrigerator or pantry")
+# def login_user(uid ):
 
-print("2. Create a recipe")
+def define_name( ):
+    first_name = input("What is your first name?")
+    last_name = input("What is your last name?")
+    response = input(f' Your name is {first_name} {last_name} correct?')
 
-print("3. Search for recipes using an ingedient or recipe name")
 
-print("4. Modify recipes ")
+    if response.lower() == "yes":
+        print("INSERT CODE FOR USERS")
+        return "Thank you, your id number is: . Would you like to login is "
+    elif response.lower() == "no":
+        define_name()
+
+
+def store_ingedient():
+    ingredient = input("Enter an ingedient: \n")
+
+
+
+
+def create_new_recipe():
+    input("Enter the recipe: \n")
+
+
 
 num = input("Enter the number command: ")
 
 def choice_switcher(num):
-     switcher = {
-        1: input("Enter an ingedient: \n"),
-        2: input("Enter the recipe: \n"),
+    pass
+
+
+if __name__ == "__main__":
+    print("Welcome to Recipe Manager")
+
+    id = input("Please log in with id number or leave blank if you are a new user.")
+
+
+    # num = input("Enter the number command: ")
+
+    # print("1. Store an ingredient in refrigerator or pantry")
+    #
+    # print("2. Create a recipe")
+    #
+    # print("3. Search for recipes using an ingredient or recipe name")
+    #
+    # print("4. Modify recipes ")
+
+    switcher = {
+        1: store_ingedient(),
+        2: create_new_recipe(),
         3: input("Enter a recipe name to search: \n"),
         4: input("Enter the change that you want to modify: \n")
     }
-if __name__ == "__main__":
-    while True:
-        num = input("Enter the number command: ")
-        choice_switcher(num)
+

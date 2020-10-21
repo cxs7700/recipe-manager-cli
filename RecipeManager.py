@@ -41,6 +41,9 @@ def store_ingredient(ingredient_option, reference_num):
         unit = input("Enter unit type for ingredient or leave blank to go back: ")
     elif ingredient_option == '2':
         ingredient_id = input("Enter the ID for the ingredient or leave blank to go back: ")
+        
+        # TODO: Handle integer and blank case
+        
         ingredient_quantity = input("Enter the quantity of the ingredient: ")
         print("\n1. Fridge")
         print("2. Pantry")

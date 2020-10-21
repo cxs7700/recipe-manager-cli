@@ -70,7 +70,7 @@ def handle_command(num):
         print("1. Add new ingredient")
         print("2. Add an existing ingredient")
         print("3. View list of ingredients")
-        print("4. Go back to main menu")
+        print("4. Go back to main menu\n")
         ingredient_option = input("What would you like to do? ")
         print(f"You have entered {ingredient_option}")
         store_ingredient(ingredient_option, num)
@@ -107,6 +107,6 @@ if __name__ == "__main__":
     print("3. Search for recipes using an ingredient or recipe name")
     print("4. Modify recipes\n")
     num = input("What would you like to do? ")
-    print(f"You have entered {num}.")
+    print(f"You have entered {num}.\n")
     handle_command(num)
     

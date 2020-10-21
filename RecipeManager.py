@@ -24,26 +24,64 @@ def register():
         connect1.execute_query(q.insert_user, firstname=first_name, lastname=last_name)
         user_id = connect1.execute_query(q.select_user_id_kwargs, firstname=first_name, lastname=last_name)
         id = user_id.fetchone()[0]
-        login_prompt = input("Thank you, your id number is: %s. Please remember it for the next time you log in. Would you like to login? (Y/N)" % id)
+        login_prompt = input("Thank you! Your new ID number is: %s. Please remember it for the next time you log in. Would you like to login? (Y/N)" % id)
         if login_prompt.upper() == "Y":
             login_user(id)
         elif login_prompt.upper() == "N":
+            print("Returning to the main menu...\n")
             start()
-            
     elif response.upper() == "N":
         print("We apologize for any inconvenience. Let's try again!")
         register()
 
-
-def store_ingedient():
-    print("Select an option to ")
-    ingredient = input("Enter an ingredient: \n")
-
+def store_ingredient(ingredient_option, reference_num):
+    if ingredient_option == '1':
+        ingredient_name = input("Enter name of the ingredient or leave blank to go back: ")
+        unit = input("Enter unit type for ingredient or leave blank to go back: ")
+    elif ingredient_option == '2':
+        ingredient_id = input("Enter the ID for the ingredient or leave blank to go back: ")
+        ingredient_quantity = input("Enter the quantity of the ingredient: ")
+        print("\n1. Fridge")
+        print("2. Pantry")
+        print("3. Go back to main menu")
+        ingredient_location = input("Where are you storing the ingredient?: ")
+        if ingredient_location == '1':
+            pass
+        if ingredient_location == '2':
+            pass
+        if ingredient_location == '3':
+            pass
+    elif ingredient_option == '3':
+        # View list of ingredients
+        # Go back to select an option to add an ingredient
+        pass
+    elif ingredient_option == '4':
+        # Go back to main menu
+        pass
+    else:
+        print("Invalid command")
+        
 def create_new_recipe():
     input("Enter the recipe: \n")
 
-def choice_switcher(num):
-    pass
+def handle_command(num):
+    if num == '1':
+        print("Select an option for ingredients:")
+        print("1. Add new ingredient")
+        print("2. Add an existing ingredient")
+        print("3. View list of ingredients")
+        print("4. Go back to main menu")
+        ingredient_option = input("What would you like to do? ")
+        print(f"You have entered {ingredient_option}")
+        store_ingredient(ingredient_option, num)
+    elif num == '2':
+        create_new_recipe()
+    elif num == '3':
+        recipe_name = input("Enter a recipe name to search: \n")
+    elif num == '4':
+        modify = input("Enter the change that you want to modify: \n")
+    else:
+        print("Invalid command")
 
 def start():
     print("Hello! Welcome to Recipe Manager!")
@@ -63,19 +101,12 @@ def start():
 if __name__ == "__main__":
     connect1 = db.Connection(DATABASE)
     start()
-    print("Welcome to the MAIN MENU! Here are the commands:")            
+    print("Welcome to the main menu! Here are the possible commands:")            
     print("1. Store an ingredient in refrigerator or pantry")
     print("2. Create a recipe")
     print("3. Search for recipes using an ingredient or recipe name")
-    print("4. Modify recipes ")
-    num = input("Enter the number command: ")
+    print("4. Modify recipes\n")
+    num = input("What would you like to do? ")
     print(f"You have entered {num}.")
+    handle_command(num)
     
-    # switcher = {
-    #     1: store_ingedient(),
-    #     2: create_new_recipe(),
-    #     3: input("Enter a recipe name to search: \n"),
-    #     4: input("Enter the change that you want to modify: \n")
-    # }
-    # register()
-

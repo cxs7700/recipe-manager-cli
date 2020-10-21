@@ -85,15 +85,15 @@ def handle_command(num):
 
 def start():
     print("Hello! Welcome to Recipe Manager!")
-    id = input("Please log in with your ID number or leave blank if you are a new user.")
+    id = input("Please log in with your ID number or leave blank if you are a new user: ")
     
     # Loops if invalid input (integer or blank)
     while not id.isdigit() and id != "":
-        id = input("Please enter a valid ID or leave blank.")
+        id = input("Please enter a valid ID or leave blank: ")
     
     # Checks if user entered a valid integer and valid id that matches a database entry
     if id.isdigit() and login_user(id) is True: 
-        print(f"You are now logged in with ID {id}.")
+        print(f"You are now logged in with ID {id}.\n")
     else:
         if id == "": 
             register()

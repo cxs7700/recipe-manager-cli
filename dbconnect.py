@@ -18,6 +18,7 @@ class Connection:
         statement = text(query)
         try:
             ret = self.__connection.execute(statement, kwargs)
+            ret = [i for i in ret]
         except:
             ret = None
 
@@ -30,6 +31,7 @@ if __name__ == "__main__":
     for thing in res:
         print(thing)
 
-    res = connection.execute_query(queries.select_users_kwargs, uid='a')
+    res = connection.execute_query(queries.select_users_kwargs, uid=500)
+    print(res)
     for thing in res:
         print(thing)

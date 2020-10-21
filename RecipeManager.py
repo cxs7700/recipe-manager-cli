@@ -1,6 +1,7 @@
 
 import dbconnect as db
 import queries as q
+
 HOST = "reddwarf.cs.rit.edu"
 USER = "p320_13"
 PASS = "aiyohleiCahc2xahtee1"
@@ -43,13 +44,18 @@ def store_ingredient(ingredient_option, reference_num):
         ingredient_quantity = input("Enter the quantity of the ingredient: ")
         print("\n1. Fridge")
         print("2. Pantry")
-        print("3. Go back to main menu")
+        print("3. Go back to main menu\n")
         ingredient_location = input("Where are you storing the ingredient?: ")
         if ingredient_location == '1':
+            # Fridge
             pass
         if ingredient_location == '2':
+            # Pantry
             pass
         if ingredient_location == '3':
+            # Go back to enter ID for the ingredient
+            print("Returning to Add Existing Ingredient flow...\n")
+            store_ingredient('2', reference_num)
             pass
     elif ingredient_option == '3':
         # View list of ingredients

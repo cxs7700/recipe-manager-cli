@@ -8,13 +8,20 @@ PORT = "5432"
 LANG = "postgresql"
 DATABASE = "%s://%s:%s@%s:%s/%s" % (LANG, USER, PASS, HOST, PORT, USER)
 
+def input_int(message):
+    somein = input(message)
+    while not somein.isdigit():
+        print("Was expecting an int")
+        somein = input(message)
+    return somein
+
 
 # TODO: Needs error handling on None return value
 def login_user(id):
     """
-    Returns True if there is a valid user ID in the database. 
+    Returns True if there is a valid user ID in the database.
     Otherwise, returns False
-    
+
     Parameters
     ----------
     id : int
@@ -31,7 +38,7 @@ def register():
     """
         Prompts for user information
         Adds user to the database
-        If the user wants to log in, head to main menu. If not, 
+        If the user wants to log in, head to main menu. If not,
     """
 
     first_name = input("What is your first name?")
@@ -82,18 +89,18 @@ def list_ingredient(uid, reference_num):
 def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
     """
     Handles different commands based on user input.
-    
+
     Parameters
     ----------
     ingredient_option : str
         user's desired action
-        
+
     reference_num : int
         initial command number used as a reference to go back to the previous menu/step
-        
+
     uid : int
         user id
-        
+
     **kwargs : optional
         keyworded arguments (iid, rid, etc.)
     """
@@ -284,7 +291,7 @@ def handle_command(num, uid):
 def start():
     """
     Runs when program is booted up.
-    
+
     Returns
     -------
     id
@@ -312,7 +319,7 @@ def main_menu(uid):
     """
     Main menu that lists initial commands
     Passes down initial command number into handle_command() for further actions
-    
+
     Parameters
     ----------
     uid : int

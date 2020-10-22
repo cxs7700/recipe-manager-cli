@@ -12,14 +12,17 @@ DATABASE = "%s://%s:%s@%s:%s/%s" % (LANG, USER, PASS, HOST, PORT, USER)
 class Connection:
     def __init__(self, db_name):
         self.__engine = sqlalchemy.create_engine(db_name)
-        self.__connection = self.__engine.connect()
 
     def execute_query(self, query, **kwargs):
         statement = text(query)
+        conn = self.__engine.connect()
         try:
-            ret = self.__connection.execute(statement, kwargs)
+            ret = conn.execute(statement, kwargs)
+            ret = [i for i in ret]
         except:
             ret = None
+        finally:
+            conn.close()
 
         return ret
 

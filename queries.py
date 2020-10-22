@@ -54,13 +54,14 @@ update_recipie = """
 """
 
 search_recipie = """
-    SELECT DISTINCT rec.rid, rec.rname FROM recipes rec
-    RIGHT JOIN requires req ON rec.rid = req.rid
+    SELECT DISTINCT rec.rid, rec.rname FROM requires req
+    LEFT JOIN recipes rec ON rec.rid = req.rid
+    LEFT JOIN ingredients i on req.iid = i.iid
     WHERE rec.rid = ?
+    OR i.iid = ?
     OR rec.rname like concat(?, '%')
-    OR req.iid = ?
-    ORDER BY rec.rid
-    ;
+    OR i.iname like concat(?, '%')
+    ORDER BY rec.rid;
 """
 
 insert_or_update_requires = """

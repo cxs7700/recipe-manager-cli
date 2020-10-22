@@ -192,14 +192,15 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
         print("\nInvalid command")
 
 
-def create_new_recipe(uid):
+def create_or_edit_recipe(uid, recipe_id=None):
     recipe_name = input("Enter a name for the recipe: \n")
-    recipe_id = connect1.execute_query(q.select_new_recipie_id)
+    if recipe_id is None:
+        recipe_id = connect1.execute_query(q.select_new_recipie_id)
     response = input(f'Your recipe name is {recipe_name} with recipe_id: {recipe_id}. Press Y or N to confirm')
     if response.upper() == "N":
-        create_new_recipe(uid)
+        create_or_edit_recipe(uid)
     elif response.upper() == "Y":
-        connect1.execute_query(q.insert_recipe, rid=recipe_id, rname=recipe_name)
+        connect1.execute_query(q.insert_or_update_recipe, rid=recipe_id, rname=recipe_name)
         # Loop for feeding in the ingredients
         while True:
             iid = input_int("Enter ingredient id or press enter to finish")
@@ -258,7 +259,7 @@ def handle_command(num, uid):
         list_ingredient(uid, num)
 
     elif num == '3':
-        create_new_recipe(uid)
+        create_or_edit_recipe(uid)
     elif num == '4':
         resp = input("Please press A for recipe search by recipe name or press B to search by recipe id or C for ingredient id")
         if resp.upper() == 'A':

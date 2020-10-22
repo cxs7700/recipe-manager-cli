@@ -59,8 +59,10 @@ select_new_recipie_id = """
     SELECT COUNT(*)+1 FROM recipes;
 """
 
-insert_recipe = """
-    INSERT INTO recipes (rid, rname) VALUES(:rid, :rname);
+insert_or_update_recipe = """
+    INSERT INTO recipes (rid, rname) VALUES(:rid, :rname)
+    ON CONFLICT (rid)
+    DO UPDATE SET rname = :rname;
 """
 
 update_recipe = """

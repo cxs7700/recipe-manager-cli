@@ -194,7 +194,7 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
 
 def create_new_recipe(uid):
     recipe_name = input("Enter a name for the recipe: \n")
-    recipe_id = input("Enter a recipe id: ")
+    recipe_id = input_int("Enter a recipe id: ")
     response = input(f'Your recipe name is {recipe_name} with recipe_id: {recipe_id}. Press Y or N to confirm')
     if response.upper() == "N":
         create_new_recipe(uid)
@@ -209,7 +209,7 @@ def create_new_recipe(uid):
             if connect1.execute_query(q.ingredients_user_doesnt_have_enough_of, uid=uid, iid=iid,
                                       quantity=quantity) != []:
                 print("Sorry! You don't have the requirement amount of this quantity to make this recipe!")
-                iid = input("Enter ingredient id or press enter to finish")
+                iid = input_int("Enter ingredient id or press enter to finish")
 
             if iid == "":
                 break

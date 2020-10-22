@@ -37,7 +37,7 @@ insert_user_ingredients = """
 
 update_user_ingredients = """
     UPDATE user_ingredients ui
-    SET quantity = :quantity
+    SET quantity = ui.quantity - :quantity
     WHERE uid = :uid
     AND iid = :iid;
 """
@@ -123,4 +123,13 @@ ingredients_user_doesnt_have_enough_of = """
                 and ui.quantity >= req.quantity)
 """
 
-
+# Use to make a recipie after running above query
+# subtract required quantity from user's quantity
+# probably run this in conjunction with update_user_ingredients
+select_user_quantity_and_req_quantity = """
+    SELECT ui.quantity, req.quantity
+    FROM user_ingredients ui
+    LEFT JOIN requires req ON req.iid = ui.iid
+    WHERE ui.uid = :uid
+    AND req.rid = :rid;
+"""

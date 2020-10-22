@@ -206,14 +206,10 @@ def create_new_recipe(uid):
             # Check if the iid belongs to the uid.
             # TODO : Figure out the logic of passing in two different quantities.
             #  One for the recipe_quantity and one for the user_quantity
-            if connect1.execute_query(q.ingredients_user_doesnt_have_enough_of, uid=uid, iid=iid,
-                                      quantity=quantity) != []:
-                print("Sorry! You don't have the requirement amount of this quantity to make this recipe!")
-                iid = input_int("Enter ingredient id or press enter to finish")
 
             if iid == "":
                 break
-            quantity = input("Enter Quantity of ingredient")
+            quantity = input_int("Enter Quantity of ingredient")
             connect1.execute_query(q.insert_or_update_requires, rid=recipe_id, iid=iid, quantity=quantity)
         count = 1
         while True:

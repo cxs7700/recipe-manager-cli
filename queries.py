@@ -25,6 +25,11 @@ select_requires = """
     SELECT * FROM requires ORDER BY rid;
 """
 
+select_ingredient_id_from_ingredient_name = """
+    SELECT iid FROM Ingredients
+    WHERE Ingredients.iname = :iname;
+"""
+
 insert_user = """
     INSERT INTO users (uid, firstname, lastname)
     VALUES ((SELECT COUNT(*)+1 FROM users), :firstname, :lastname);
@@ -34,6 +39,8 @@ insert_ingredient = """
     INSERT INTO Ingredients (iid, iname, unit_type)
     VALUES ((SELECT COUNT(*)+1 FROM ingredients), :iname, :unit);
 """
+
+# Need an UPSERT user ingredients (update or insert)
 
 update_user_ingredients = """
     UPDATE user_ingredients
@@ -52,13 +59,13 @@ insert_recipe = """
     INSERT INTO recipes (rid, rname) VALUES((SELECT COUNT(*)+1 FROM recipes), :rname);
 """
 
-update_recipie = """
+update_recipe = """
     UPDATE recipes
     SET rname = :rname
     WHERE rid = :rid;
 """
 
-search_recipie = """
+search_recipe = """
     SELECT DISTINCT rec.rid, rec.rname FROM recipes rec
     RIGHT JOIN requires req ON rec.rid = req.rid
     WHERE rec.rid = ?

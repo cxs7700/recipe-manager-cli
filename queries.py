@@ -28,11 +28,16 @@ insert_ingredient = """
     VALUES ((SELECT COUNT(*)+1 FROM ingredients), :iname, :unit);
 """
 
-insert_or_update_user_ingredients = """
+insert_user_ingredients = """
     INSERT INTO user_ingredients (uid, iid, quantity, location) VALUES (?, ?, ?, ?)
     ON CONFLICT (uid, iid)
     DO UPDATE
-    SET quantity = quantity + :quantity
+    SET quantity = :quantity;
+"""
+
+update_user_ingredients = """
+    UPDATE user_ingredients ui
+    SET quantity = :quantity
     WHERE uid = :uid
     AND iid = :iid;
 """
@@ -101,3 +106,21 @@ update_steps_row_number = """
     WHERE rid = :rid
     AND number = :row;
 """
+
+ingredients_user_doesnt_have_enough_of = """
+    SELECT
+           req.rid,
+           req.iid,
+           req.quantity
+    FROM requires req
+    WHERE req.rid = :rid
+    AND NOT EXISTS(
+               select
+                      'x'
+               from user_ingredients ui
+               where ui.uid = :uid
+                and ui.iid = req.iid
+                and ui.quantity >= req.quantity)
+"""
+
+

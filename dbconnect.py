@@ -14,7 +14,7 @@ class Connection:
         self.__engine = sqlalchemy.create_engine(db_name)
 
     def execute_query(self, query, **kwargs):
-        statement = text(query)
+        statement = text(query + ';')
         conn = self.__engine.connect()
         try:
             ret = conn.execute(statement, kwargs)
@@ -33,6 +33,6 @@ if __name__ == "__main__":
     for thing in res:
         print(thing)
 
-    res = connection.execute_query(queries.select_users_kwargs, uid='a')
+    res = connection.execute_query(queries.ingredients_user_doesnt_have_enough_of, uid=1, rid=1)
     for thing in res:
         print(thing)

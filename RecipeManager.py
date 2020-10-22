@@ -11,7 +11,9 @@ DATABASE = "%s://%s:%s@%s:%s/%s" % (LANG, USER, PASS, HOST, PORT, USER)
 def input_int(message):
     somein = input(message)
     while not somein.isdigit():
-        print("Was expecting an int")
+        if somein == '':
+            return somein
+        print("Was expecting an int or empty string")
         somein = input(message)
     return somein
 
@@ -200,7 +202,7 @@ def create_new_recipe(uid):
         connect1.execute_query(q.insert_recipe, rid=recipe_id, rname=recipe_name)
         # Loop for feeding in the ingredients
         while True:
-            iid = input("Enter ingredient id or press enter to finish")
+            iid = input_int("Enter ingredient id or press enter to finish")
             # Check if the iid belongs to the uid.
             # TODO : Figure out the logic of passing in two different quantities.
             #  One for the recipe_quantity and one for the user_quantity

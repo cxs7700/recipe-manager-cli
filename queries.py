@@ -28,8 +28,10 @@ insert_ingredient = """
     VALUES ((SELECT COUNT(*)+1 FROM ingredients), :iname, :unit);
 """
 
-update_user_ingredients = """
-    UPDATE user_ingredients
+insert_or_update_user_ingredients = """
+    INSERT INTO user_ingredients (uid, iid, quantity, location) VALUES (?, ?, ?, ?)
+    ON CONFLICT (uid, iid)
+    DO UPDATE
     SET quantity = quantity + :quantity
     WHERE uid = :uid
     AND iid = :iid;

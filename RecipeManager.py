@@ -194,7 +194,7 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
 
 def create_new_recipe(uid):
     recipe_name = input("Enter a name for the recipe: \n")
-    recipe_id = input_int("Enter a recipe id: ")
+    recipe_id = connect1.execute_query(q.select_new_recipie_id)
     response = input(f'Your recipe name is {recipe_name} with recipe_id: {recipe_id}. Press Y or N to confirm')
     if response.upper() == "N":
         create_new_recipe(uid)

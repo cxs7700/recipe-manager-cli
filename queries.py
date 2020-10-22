@@ -55,8 +55,12 @@ select_user_ingredients = """
     WHERE ui.uid = :uid;
 """
 
+select_new_recipie_id = """
+    SELECT COUNT(*)+1 FROM recipes;
+"""
+
 insert_recipe = """
-    INSERT INTO recipes (rid, rname) VALUES((SELECT COUNT(*)+1 FROM recipes), :rname);
+    INSERT INTO recipes (rid, rname) VALUES(:rid, :rname);
 """
 
 update_recipe = """

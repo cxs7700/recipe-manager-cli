@@ -117,7 +117,11 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
             print("Returning to options for storing ingredients...\n")
             handle_command(reference_num, uid)
 
-        # TODO: Provide loop here to ensure that user is not adding duplicate Ingredient into database
+        ingredient_in_database = connect1.execute_query(q.select_ingredients_by_name, name=ingredient_name)
+        if ingredient_in_database != []:
+            print("ERROR! Ingredient is already in database")
+            print("Returning to the main menu...\n")
+            main_menu(uid)
 
         ingredient_unit = input("Enter unit type for ingredient or press enter to go back: ")
         if ingredient_unit == "":
@@ -168,6 +172,7 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
             if confirm_location.upper() == "Y":
                 # TODO: Insert into user ingredients
                 # Currently ends the script and logs out the user
+                
                 pass
             elif confirm_location.upper() == "N":
                 print("\nReturning to the entering ingredient ID... ")

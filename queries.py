@@ -14,6 +14,11 @@ select_ingredients = """
     SELECT iid, iname FROM ingredients;
 """
 
+select_ingredients_by_name = """
+    SELECT * FROM ingredients
+    WHERE ingredients.name = :name;
+"""
+
 select_requires = """
     SELECT * FROM requires ORDER BY rid;
 """

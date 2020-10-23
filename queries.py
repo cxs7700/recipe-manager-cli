@@ -37,9 +37,15 @@ insert_user_ingredients = """
 
 update_user_ingredients = """
     UPDATE user_ingredients ui
-    SET quantity = ui.quantity - :quantity
+    SET quantity = ui.quantity + :quantity
     WHERE uid = :uid
     AND iid = :iid;
+"""
+# run this after, which will make sure a user's ingredients are removed if they reach 0 or below (somehow)
+delete_user_ingredients_0 = """
+    DELETE FROM user_ingredients
+    WHERE quantity <= 0
+    OR quantity IS NULL;
 """
 
 select_user_ingredients = """
@@ -166,3 +172,7 @@ select_user_quantity_and_req_quantity = """
     WHERE ui.uid = :uid
     AND req.rid = :rid;
 """
+
+insert_date_made = """
+    INSERT INTO dates_made (date, uid, rid) VALUES (CURRENT_TIMESTAMP, :uid, :rid);
+"""""

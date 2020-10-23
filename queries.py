@@ -16,12 +16,12 @@ select_ingredients = """
 
 select_ingredients_by_name = """
     SELECT * FROM ingredients
-    WHERE ingredients.iname = :name;
+    WHERE ingredients.iname = :iname;
 """
 
 select_ingredient_id_from_ingredient_name = """
     SELECT ingredients.iid FROM ingredients
-    WHERE ingredients.iname = :name;
+    WHERE ingredients.iname = :iname;
 """
 
 select_requires = """

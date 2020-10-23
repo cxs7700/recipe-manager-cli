@@ -117,7 +117,7 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
             print("Returning to options for storing ingredients...\n")
             handle_command(reference_num, uid)
 
-        ingredient_in_database = connect1.execute_query(q.select_ingredients_by_name, name=ingredient_name)
+        ingredient_in_database = connect1.execute_query(q.select_ingredients_by_name, iname=ingredient_name)
         if ingredient_in_database != []:
             print("ERROR! Ingredient is already in database")
             print("Returning to the main menu...\n")
@@ -141,7 +141,8 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
         if confirm_add_ingredient.upper() == "Y":
             ingredient_id = connect1.execute_query(q.select_ingredient_id_from_ingredient_name, iname=ingredient_name)
             print("Ingredient ID: ", ingredient_id)
-            store_ingredient('2', reference_num, uid, iid=ingredient_id, iname=ingredient_name)
+            iid = ingredient_id[0][0]
+            store_ingredient('2', reference_num, uid, iid=iid, iname=ingredient_name)
         elif confirm_add_ingredient.upper() == "N":  # Command finished - nothing else to do, so returns to main menu
             main_menu(uid)
 
@@ -170,8 +171,6 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
             confirm_location = input(
                 f"You would like to store {ingredient_quantity} of Ingredient {kwargs['iname']} into the {ingredient_location}? (Y/N): ")
             if confirm_location.upper() == "Y":
-                # TODO: Insert into user ingredients
-                # Currently ends the script and logs out the user
                 connect1.execute_query(q.insert_user_ingredients, quantity=int(ingredient_quantity))
             elif confirm_location.upper() == "N":
                 print("\nReturning to the entering ingredient ID... ")
@@ -246,7 +245,7 @@ def make_recipe(uid, rid):
         WHERE requires.iid = ingredients.iid
         AND requires.rid = :rid;
     """
-    if connect1.execute_query(q.ingredients_user_doesnt_have_enough_of, rid=rid, uid=uid) != []:
+    if connect1.execute_query(q.ingredients_user_doesnt_have_enough_of, rid=rid, uid=uid):
         return False
     else:
         required_ingredients = connect1.execute_query(sql, rid=rid)
@@ -256,6 +255,7 @@ def make_recipe(uid, rid):
             # print("iid ", x[0])
             # print("quantity ", x[1])
             connect1.execute_query(q.update_user_ingredients, quantity=quantity, uid=uid, iid=iid)
+        # TODO: insert into dates made
         return True
 
 def handle_command(num, uid):

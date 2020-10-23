@@ -222,15 +222,14 @@ def create_or_edit_recipe(uid, recipe_id=None):
 
     main_menu(uid)
 
-def search_recipe_by_recipe_id(uid, reference_num, rid):
+def search_recipe_by_recipe_name(name):
+    return connect1.execute_query(q.search_recipe_name, rname=name)
 
+def search_recipe_by_recipe_id(rid):
+    return connect1.execute_query(q.search_recipe_id, rid=rid)
 
-def search_recipe_by_recipe_name(uid, reference_num, name):
-    pass
-
-def search_recipe_by_ingredient_id(uid, reference_num, iid):
-    pass
-
+def search_recipe_by_ingredient_id(iid):
+    return connect1.execute_query(q.search_recipe_ing_id, iid=iid)
 
 def handle_command(num, uid):
     if num == '1':
@@ -252,22 +251,44 @@ def handle_command(num, uid):
         resp = input("Please press A for recipe search by recipe name or press B to search by recipe id or C for ingredient id")
         if resp.upper() == 'A':
             recipe_name = input("Enter the recipe name you would like to search: \n")
-
-            search_recipe_by_recipe_name(recipe_name)
+            while recipe_name.isdigit() or recipe_name == "":
+                recipe_name = input("Please enter a valid recipe name: ")
+            recipe_results = search_recipe_by_recipe_name(recipe_name)
         elif resp.upper() == "B":
             recipe_id = input("Enter the recipe id you would like to search: \n")
-            search_recipe_by_recipe_id(recipe_id)
+            recipe_results = search_recipe_by_recipe_id(recipe_id)
         elif resp.upper() == "C":
             ingredient_id = input("Enter the ingredient id you would like to search: \n")
-            search_recipe_by_ingredient_id(uid, num, ingredient_id)
-
+            recipe_results = search_recipe_by_ingredient_id(ingredient_id)
         else:
-            print(" Please enter a valid option: ")
+            print("Please enter a valid option: ")
             print("Heading to the main menu...\n")
             main_menu(uid)
+        if recipe_results == None:
+            print("No results found.\n")
+        else:
+            for x in recipe_results:
+                print(x)
+            recipe_choice = input_int("Select recipe ID number or leave blank to go to the main menu: ")
+            print("1. Make this recipe. ")
+            print("2. Modify this recipe. ")
+            print("Go back")
+            recipe_action = input_int("Select an option")
+            if recipe_choice == '1':
+                pass
+            if recipe_choice == '2':
+                # TODO: Wait for create_new_recipe() to finish before redirecting user
+                # create_or_edit_recipe(uid, recipe_id=recipe_choice)
+                pass
+            if recipe_choice == '3':
+                print("Going back...")
+                handle_command(num, uid)
+                
+        print("Returning to the main menu...\n")
+        main_menu(uid)
 
     elif num == '5':
-        print("Logging out...")
+        print("Logging out...\n")
         return
     else:
         print("Invalid command")

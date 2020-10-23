@@ -87,7 +87,7 @@ search_recipe_name = """
 """
 
 search_recipe_ing_id = """
-    SELECT DISTINCT rec.rit, rec.rname FROM recipes rec
+    SELECT DISTINCT rec.rid, rec.rname FROM recipes rec
     LEFT JOIN recipes rec ON rec.rid = req.rid
     LEFT JOIN ingredients i on req.iid = i.iid
     WHERE i.iid = :iid
@@ -95,7 +95,7 @@ search_recipe_ing_id = """
 """
 
 search_recipe_ing_name = """
-    SELECT DISTINCT rec.rit, rec.rname FROM recipes rec
+    SELECT DISTINCT rec.rid, rec.rname FROM recipes rec
     LEFT JOIN recipes rec ON rec.rid = req.rid
     LEFT JOIN ingredients i on req.iid = i.iid
     WHERE i.iname = :iname

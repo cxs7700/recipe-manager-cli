@@ -31,7 +31,10 @@ def login_user(id):
     """
 
     res = connect1.execute_query(q.select_users_kwargs, uid=id)
-    if res is None:
+    print("id ", id)
+    print(res)
+    print(res)
+    if not res or res == '0':
         return False
     return True
 
@@ -231,16 +234,23 @@ def search_recipe_by_recipe_id(rid):
 def search_recipe_by_ingredient_id(iid):
     return connect1.execute_query(q.search_recipe_ing_id, iid=iid)
     
-# rid = recipe_choice
 def make_recipe(uid, rid):
-    if connect1.execute_query(q.ingredients_user_doesnt_have_enough_of, rid=rid, uid=uid) != None:
+    sql = """
+        SELECT ingredients.iid, requires.quantity FROM requires, ingredients
+        WHERE requires.iid = ingredients.iid
+        AND requires.rid = :rid;
+    """
+    if connect1.execute_query(q.ingredients_user_doesnt_have_enough_of, rid=rid, uid=uid) != []:
         return False
     else:
-        # for each required ingredient in recipe
-            # Get quantity required
-            # Update user ingredients => (quantity of ingredient in user ingredients) - (quantity required)
-        # return True
-    
+        required_ingredients = connect1.execute_query(sql, rid=rid)
+        for x in required_ingredients:
+            iid = x[0]
+            quantity = x[1]
+            # print("iid ", x[0])
+            # print("quantity ", x[1])
+            connect1.execute_query(q.update_user_ingredients, quantity=quantity, uid=uid, iid=iid)
+        return True
 
 def handle_command(num, uid):
     if num == '1':
@@ -285,10 +295,9 @@ def handle_command(num, uid):
             print("2. Modify this recipe. ")
             print("3. Go back")
             recipe_action = input_int("Select an option")
-            if recipe_choice == '1':
+            if recipe_action == '1':
                 confirm = input("Make this recipe? This will remove corresponding ingredients from your storage (Y/N): ")
                 if confirm.upper() == 'Y':
-                    # TODO: Remove from user ingredients
                     is_made = make_recipe(uid, recipe_choice)
                     if is_made == True:
                         print("Recipe successfully made!")

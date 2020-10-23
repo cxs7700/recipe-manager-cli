@@ -139,8 +139,8 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
 
         confirm_add_ingredient = input("Do you want to add this new ingredient to your storage? (Y/N): ")
         if confirm_add_ingredient.upper() == "Y":
-            ingredient_id = \
-                connect1.execute_query(q.select_ingredient_id_from_ingredient_name, iname=ingredient_name).fetchone()[0]
+            ingredient_id = connect1.execute_query(q.select_ingredient_id_from_ingredient_name, iname=ingredient_name)
+            print("Ingredient ID: ", ingredient_id)
             store_ingredient('2', reference_num, uid, iid=ingredient_id, iname=ingredient_name)
         elif confirm_add_ingredient.upper() == "N":  # Command finished - nothing else to do, so returns to main menu
             main_menu(uid)
@@ -172,11 +172,12 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
             if confirm_location.upper() == "Y":
                 # TODO: Insert into user ingredients
                 # Currently ends the script and logs out the user
-                
-                pass
+                connect1.execute_query(q.insert_user_ingredients, quantity=int(ingredient_quantity))
             elif confirm_location.upper() == "N":
                 print("\nReturning to the entering ingredient ID... ")
                 store_ingredient('2', reference_num, uid, iid=None)
+            print("Returning to the main menu...\n")
+            main_menu(uid)
 
         elif ingredient_location == '3':
             print("\nReturning to the main menu... ")

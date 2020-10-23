@@ -16,7 +16,12 @@ select_ingredients = """
 
 select_ingredients_by_name = """
     SELECT * FROM ingredients
-    WHERE ingredients.name = :name;
+    WHERE ingredients.iname = :name;
+"""
+
+select_ingredient_id_from_ingredient_name = """
+    SELECT ingredients.iid FROM ingredients
+    WHERE ingredients.iname = :name;
 """
 
 select_requires = """
@@ -29,7 +34,7 @@ insert_user = """
 """
 
 insert_ingredient = """
-    INSERT INTO Ingredients (iid, iname, unit_type)
+    INSERT INTO ingredients (iid, iname, unit_type)
     VALUES ((SELECT COUNT(*)+1 FROM ingredients), :iname, :unit);
 """
 

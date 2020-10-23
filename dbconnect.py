@@ -14,13 +14,14 @@ class Connection:
         self.__engine = sqlalchemy.create_engine(db_name)
 
     def execute_query(self, query, **kwargs):
-        statement = text(query)
+        statement = text(query+';')
         conn = self.__engine.connect()
         try:
             ret = conn.execute(statement, kwargs)
             ret = [i for i in ret]
         except:
             ret = None
+            print("Failed to execute query: %s" % query)
         finally:
             conn.close()
 

@@ -212,15 +212,13 @@ def create_or_edit_recipe(uid, recipe_id=None):
         # Loop for feeding in the ingredients
         while True:
             iid = input_int("Enter ingredient id or press enter to finish")
-            # Check if the iid belongs to the uid.
-            # TODO : Figure out the logic of passing in two different quantities.
-            #  One for the recipe_quantity and one for the user_quantity
 
             if iid == "":
                 break
             quantity = input_int("Enter Quantity of ingredient")
             connect1.execute_query(q.insert_or_update_requires, rid=recipe_id, iid=iid, quantity=quantity)
         count = 1
+        connect1.execute_query(q.delete_steps_for_rec, rid=recipe_id)
         while True:
             step = input(f'Enter step {count} or press enter to finish')
             if step == "":
@@ -238,7 +236,7 @@ def search_recipe_by_recipe_id(rid):
 
 def search_recipe_by_ingredient_id(iid):
     return connect1.execute_query(q.search_recipe_ing_id, iid=iid)
-    
+
 def make_recipe(uid, rid):
     sql = """
         SELECT ingredients.iid, requires.quantity FROM requires, ingredients
@@ -314,7 +312,7 @@ def handle_command(num, uid):
                     else:
                         print("ERROR! Returning to the main menu\n")
                         main_menu(uid)
-                        
+
                 elif confirm.upper() == 'N':
                     handle_command(num, uid)
             if recipe_choice == '2':
@@ -324,7 +322,7 @@ def handle_command(num, uid):
             if recipe_choice == '3':
                 print("Going back...")
                 handle_command(num, uid)
-                
+
         print("Returning to the main menu...\n")
         main_menu(uid)
 

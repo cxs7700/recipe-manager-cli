@@ -48,8 +48,14 @@ select_user_ingredients = """
     WHERE ui.uid = :uid;
 """
 
-insert_recipe = """
-    INSERT INTO recipes (rid, rname) VALUES((SELECT COUNT(*)+1 FROM recipes), :rname);
+select_new_recipie_id = """
+    SELECT COUNT(*)+1 FROM recipes;
+"""
+
+insert_or_update_recipe = """
+    INSERT INTO recipes (rid, rname) VALUES(:rid, :rname)
+    ON CONFLICT (rid)
+    DO UPDATE SET rname = :rname;
 """
 
 update_recipe = """
@@ -58,6 +64,7 @@ update_recipe = """
     WHERE rid = :rid;
 """
 
+#please don't use this
 search_recipe = """
     SELECT DISTINCT rec.rid, rec.rname FROM requires req
     LEFT JOIN recipes rec ON rec.rid = req.rid
@@ -66,6 +73,32 @@ search_recipe = """
     OR i.iid = ?
     OR rec.rname like concat(?, '%')
     OR i.iname like concat(?, '%')
+    ORDER BY rec.rid;
+"""
+
+search_recipe_id = """
+    SELECT DISTINCT rec.rid, rec.rname FROM recipes rec
+    WHERE rec.rid = :rid;
+"""
+
+search_recipe_name = """
+    SELECT rec.rid, rec.rname FROM recipes rec
+    WHERE rec.rname like concat(:rname, '%');
+"""
+
+search_recipe_ing_id = """
+    SELECT DISTINCT rec.rit, rec.rname FROM recipes rec
+    LEFT JOIN recipes rec ON rec.rid = req.rid
+    LEFT JOIN ingredients i on req.iid = i.iid
+    WHERE i.iid = :iid
+    ORDER BY rec.rid;
+"""
+
+search_recipe_ing_name = """
+    SELECT DISTINCT rec.rit, rec.rname FROM recipes rec
+    LEFT JOIN recipes rec ON rec.rid = req.rid
+    LEFT JOIN ingredients i on req.iid = i.iid
+    WHERE i.iname = :iname
     ORDER BY rec.rid;
 """
 

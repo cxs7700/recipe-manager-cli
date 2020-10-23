@@ -8,13 +8,22 @@ PORT = "5432"
 LANG = "postgresql"
 DATABASE = "%s://%s:%s@%s:%s/%s" % (LANG, USER, PASS, HOST, PORT, USER)
 
+def input_int(message):
+    somein = input(message)
+    while not somein.isdigit():
+        if somein == '':
+            return somein
+        print("Was expecting an int or empty string")
+        somein = input(message)
+    return somein
+
 
 # TODO: Needs error handling on None return value
 def login_user(id):
     """
-    Returns True if there is a valid user ID in the database. 
+    Returns True if there is a valid user ID in the database.
     Otherwise, returns False
-    
+
     Parameters
     ----------
     id : int
@@ -31,7 +40,7 @@ def register():
     """
         Prompts for user information
         Adds user to the database
-        If the user wants to log in, head to main menu. If not, 
+        If the user wants to log in, head to main menu. If not,
     """
 
     first_name = input("What is your first name?")
@@ -82,18 +91,18 @@ def list_ingredient(uid, reference_num):
 def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
     """
     Handles different commands based on user input.
-    
+
     Parameters
     ----------
     ingredient_option : str
         user's desired action
-        
+
     reference_num : int
         initial command number used as a reference to go back to the previous menu/step
-        
+
     uid : int
         user id
-        
+
     **kwargs : optional
         keyworded arguments (iid, rid, etc.)
     """
@@ -183,26 +192,25 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
         print("\nInvalid command")
 
 
-def create_new_recipe(uid):
+def create_or_edit_recipe(uid, recipe_id=None):
     recipe_name = input("Enter a name for the recipe: \n")
-    recipe_id = input("Enter a recipe id: ")
+    if recipe_id is None:
+        recipe_id = connect1.execute_query(q.select_new_recipie_id)
     response = input(f'Your recipe name is {recipe_name} with recipe_id: {recipe_id}. Press Y or N to confirm')
     if response.upper() == "N":
-        create_new_recipe(uid)
+        create_or_edit_recipe(uid)
     elif response.upper() == "Y":
-        connect1.execute_query(q.insert_recipe, rid=recipe_id, rname=recipe_name)
+        connect1.execute_query(q.insert_or_update_recipe, rid=recipe_id, rname=recipe_name)
         # Loop for feeding in the ingredients
         while True:
-            iid = input("Enter ingredient id or press enter to finish")
+            iid = input_int("Enter ingredient id or press enter to finish")
             # Check if the iid belongs to the uid.
             # TODO : Figure out the logic of passing in two different quantities.
             #  One for the recipe_quantity and one for the user_quantity
-            if connect1.execute_query(q.ingredients_user_doesnt_have_enough_of, uid=uid, iid=iid, quantity=quantity) != []:
-                print("Sorry! You don't have the requirement amount of this quantity to make this recipe!")
 
             if iid == "":
                 break
-            quantity = input("Enter Quantity of ingredient")
+            quantity = input_int("Enter Quantity of ingredient")
             connect1.execute_query(q.insert_or_update_requires, rid=recipe_id, iid=iid, quantity=quantity)
         count = 1
         while True:
@@ -215,7 +223,7 @@ def create_new_recipe(uid):
     main_menu(uid)
 
 def search_recipe_by_recipe_id(uid, reference_num, rid):
-    
+
 
 def search_recipe_by_recipe_name(uid, reference_num, name):
     pass
@@ -239,13 +247,12 @@ def handle_command(num, uid):
         list_ingredient(uid, num)
 
     elif num == '3':
-        create_new_recipe(uid)
-        
+        create_or_edit_recipe(uid)
     elif num == '4':
         resp = input("Please press A for recipe search by recipe name or press B to search by recipe id or C for ingredient id")
         if resp.upper() == 'A':
             recipe_name = input("Enter the recipe name you would like to search: \n")
-            
+
             search_recipe_by_recipe_name(recipe_name)
         elif resp.upper() == "B":
             recipe_id = input("Enter the recipe id you would like to search: \n")
@@ -270,7 +277,7 @@ def handle_command(num, uid):
 def start():
     """
     Runs when program is booted up.
-    
+
     Returns
     -------
     id
@@ -298,7 +305,7 @@ def main_menu(uid):
     """
     Main menu that lists initial commands
     Passes down initial command number into handle_command() for further actions
-    
+
     Parameters
     ----------
     uid : int

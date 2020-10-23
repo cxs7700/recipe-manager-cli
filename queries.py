@@ -39,7 +39,7 @@ insert_ingredient = """
 """
 
 insert_user_ingredients = """
-    INSERT INTO user_ingredients (uid, iid, quantity, location) VALUES (?, ?, ?, ?)
+    INSERT INTO user_ingredients (uid, iid, quantity, location) VALUES (:uid, :iid, :quantity, :location)
     ON CONFLICT (uid, iid)
     DO UPDATE
     SET quantity = :quantity;
@@ -194,3 +194,7 @@ check_user_exists = """
         WHERE uid = :uid
         );
 """""
+
+delete_steps_for_rec = """
+    DELETE FROM steps WHERE rid = :rid;
+"""

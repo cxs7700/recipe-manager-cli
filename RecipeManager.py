@@ -256,10 +256,10 @@ def handle_command(num, uid):
             recipe_results = search_recipe_by_recipe_name(recipe_name)
         elif resp.upper() == "B":
             recipe_id = input("Enter the recipe id you would like to search: \n")
-            recipe_results = search_recipe_by_recipe_id(recipe_id)
+            recipe_results = search_recipe_by_recipe_id(int(recipe_id))
         elif resp.upper() == "C":
             ingredient_id = input("Enter the ingredient id you would like to search: \n")
-            recipe_results = search_recipe_by_ingredient_id(ingredient_id)
+            recipe_results = search_recipe_by_ingredient_id(int(ingredient_id))
         else:
             print("Please enter a valid option: ")
             print("Heading to the main menu...\n")
@@ -272,10 +272,16 @@ def handle_command(num, uid):
             recipe_choice = input_int("Select recipe ID number or leave blank to go to the main menu: ")
             print("1. Make this recipe. ")
             print("2. Modify this recipe. ")
-            print("Go back")
+            print("3. Go back")
             recipe_action = input_int("Select an option")
             if recipe_choice == '1':
-                pass
+                confirm = input("Make this recipe? This will remove corresponding ingredients from your storage (Y/N): ")
+                if confirm.upper() == 'Y':
+                    # TODO: Remove from user_ingredients code
+                    # make_recipe()
+                    pass
+                elif confirm.upper() == 'N':
+                    handle_command(num, uid)
             if recipe_choice == '2':
                 # TODO: Wait for create_new_recipe() to finish before redirecting user
                 # create_or_edit_recipe(uid, recipe_id=recipe_choice)

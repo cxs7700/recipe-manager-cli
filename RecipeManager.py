@@ -230,6 +230,17 @@ def search_recipe_by_recipe_id(rid):
 
 def search_recipe_by_ingredient_id(iid):
     return connect1.execute_query(q.search_recipe_ing_id, iid=iid)
+    
+# rid = recipe_choice
+def make_recipe(uid, rid):
+    if connect1.execute_query(q.ingredients_user_doesnt_have_enough_of, rid=rid, uid=uid) != None:
+        return False
+    else:
+        # for each required ingredient in recipe
+            # Get quantity required
+            # Update user ingredients => (quantity of ingredient in user ingredients) - (quantity required)
+        # return True
+    
 
 def handle_command(num, uid):
     if num == '1':
@@ -277,9 +288,18 @@ def handle_command(num, uid):
             if recipe_choice == '1':
                 confirm = input("Make this recipe? This will remove corresponding ingredients from your storage (Y/N): ")
                 if confirm.upper() == 'Y':
-                    # TODO: Remove from user_ingredients code
-                    # make_recipe()
-                    pass
+                    # TODO: Remove from user ingredients
+                    is_made = make_recipe(uid, recipe_choice)
+                    if is_made == True:
+                        print("Recipe successfully made!")
+                    elif is_made == False:
+                        print("You do not have enough ingredients to make this recipe.")
+                        print("Returning to the main menu...\n")
+                        main_menu(uid)
+                    else:
+                        print("ERROR! Returning to the main menu\n")
+                        main_menu(uid)
+                        
                 elif confirm.upper() == 'N':
                     handle_command(num, uid)
             if recipe_choice == '2':

@@ -181,3 +181,11 @@ select_user_quantity_and_req_quantity = """
 insert_date_made = """
     INSERT INTO dates_made (date, uid, rid) VALUES (CURRENT_TIMESTAMP, :uid, :rid);
 """""
+
+check_user_exists = """
+    SELECT EXISTS(
+        SELECT 'x'
+        FROM users
+        WHERE uid = :uid
+        );
+"""""

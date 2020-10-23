@@ -214,26 +214,14 @@ def create_new_recipe(uid):
 
     main_menu(uid)
 
+def search_recipe_by_recipe_id(uid, reference_num, rid):
+    
 
-def search_recipe(recipe_name="", recipe_id=0, ingredient_id = 0):
-    #TODO: Make success messages and error checks if the ids and/or names are valid
-    # if recipe_name == "" and recipe_id == 0 and ingredient_id == 0:
-    #     print("Need a valid recipe name or recipe id or ingredient id please!")
-    #     main_menu(uid)
-    #     return
-    if recipe_id != 0:
-        connect1.execute_query(q.search_recipe, rid=recipe_id)
-        main_menu()
-        return
-    elif recipe_name != "":
-        connect1.execute_query(q.search_recipe, rname=recipe_name)
-        main_menu()
-        return
-    else:
-        print("Need a valid recipe name or recipe id or ingredient id please!")
-        main_menu(uid)
-        return
+def search_recipe_by_recipe_name(uid, reference_num, name):
+    pass
 
+def search_recipe_by_ingredient_id(uid, reference_num, iid):
+    pass
 
 
 def handle_command(num, uid):
@@ -252,24 +240,24 @@ def handle_command(num, uid):
 
     elif num == '3':
         create_new_recipe(uid)
+        
     elif num == '4':
         resp = input("Please press A for recipe search by recipe name or press B to search by recipe id or C for ingredient id")
         if resp.upper() == 'A':
             recipe_name = input("Enter the recipe name you would like to search: \n")
-            search_recipe(recipe_name)
+            
+            search_recipe_by_recipe_name(recipe_name)
         elif resp.upper() == "B":
             recipe_id = input("Enter the recipe id you would like to search: \n")
-            search_recipe(recipe_id)
+            search_recipe_by_recipe_id(recipe_id)
         elif resp.upper() == "C":
             ingredient_id = input("Enter the ingredient id you would like to search: \n")
-            search_recipe(ingredient_id)
+            search_recipe_by_ingredient_id(uid, num, ingredient_id)
 
         else:
             print(" Please enter a valid option: ")
             print("Heading to the main menu...\n")
             main_menu(uid)
-
-
 
     elif num == '5':
         print("Logging out...")

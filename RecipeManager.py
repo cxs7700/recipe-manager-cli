@@ -18,7 +18,6 @@ def input_int(message):
     return somein
 
 
-# TODO: Needs error handling on None return value
 def login_user(id):
     """
     Returns True if there is a valid user ID in the database.
@@ -30,11 +29,9 @@ def login_user(id):
         user id
     """
 
-    res = connect1.execute_query(q.select_users_kwargs, uid=id)
-    print("id ", id)
-    print(res)
-    print(res)
-    if not res or res == '0':
+    res = connect1.execute_query(q.check_user_exists, uid=id)
+    print(res[0][0])
+    if res[0][0] == False:
         return False
     return True
 
@@ -171,10 +168,11 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
             confirm_location = input(
                 f"You would like to store {ingredient_quantity} of Ingredient {kwargs['iname']} into the {ingredient_location}? (Y/N): ")
             if confirm_location.upper() == "Y":
-                connect1.execute_query(q.insert_user_ingredients, quantity=int(ingredient_quantity))
+                connect1.execute_query(q.insert_user_ingredients, quantity=int(ingredient_quantity), uid=uid, iid=ingredient_id, location=ingredient_location)
             elif confirm_location.upper() == "N":
                 print("\nReturning to the entering ingredient ID... ")
                 store_ingredient('2', reference_num, uid, iid=None)
+            print("Add successful!\n")
             print("Returning to the main menu...\n")
             main_menu(uid)
 
@@ -353,7 +351,7 @@ def start():
 
     # Checks if user entered a valid integer and valid id that matches a registered user
     # Otherwise, register the user
-    if id.isdigit() and login_user(id) is True:
+    if id.isdigit() and login_user(id) == True:
         print(f"You are now logged in with ID {id}.\n")
         return id
     else:

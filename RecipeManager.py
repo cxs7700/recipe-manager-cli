@@ -163,7 +163,7 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
         if ingredient_location == '1' or ingredient_location == '2':
             ingredient_location = "Fridge" if ingredient_location == '1' else "Pantry"
             confirm_location = input(
-                f"You would like to store {ingredient_quantity} of Ingredient {kwargs['iname']} into the {ingredient_location}? (Y/N): ")
+                f"You would like to store {ingredient_quantity} of Ingredient {ingredient_id} into the {ingredient_location}? (Y/N): ")
             if confirm_location.upper() == "Y":
                 connect1.execute_query(q.insert_user_ingredients, quantity=int(ingredient_quantity), uid=uid, iid=ingredient_id, location=ingredient_location)
             elif confirm_location.upper() == "N":

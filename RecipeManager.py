@@ -245,10 +245,7 @@ def make_recipe(uid, rid):
         for x in required_ingredients:
             iid = x[0]
             quantity = x[1]
-            # print("iid ", x[0])
-            # print("quantity ", x[1])
             connect1.execute_query(q.update_user_ingredients, quantity=quantity, uid=uid, iid=iid)
-        # TODO: insert into dates made
         connect1.execute_query(q.insert_date_made, uid=uid, rid=rid)
         return True
 
@@ -312,7 +309,6 @@ def handle_command(num, uid):
                 elif confirm.upper() == 'N':
                     handle_command(num, uid)
             elif recipe_action == '2':
-                # TODO: Wait for create_new_recipe() to finish before redirecting user
                 create_or_edit_recipe(uid, recipe_id=recipe_choice)
             elif recipe_action == '3':
                 print("Going back...")

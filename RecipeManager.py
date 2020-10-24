@@ -165,11 +165,10 @@ def store_ingredient(ingredient_option, reference_num, uid, **kwargs):
             confirm_location = input(
                 f"You would like to store {ingredient_quantity} of Ingredient ID {ingredient_id} into the {ingredient_location}? (Y/N): ")
             if confirm_location.upper() == "Y":
-                connect1.execute_query(q.insert_user_ingredients, quantity=int(ingredient_quantity), uid=uid, iid=ingredient_id, location=ingredient_location)
+                connect1.execute_query(q.insert_user_ingredients, uid=uid, iid=ingredient_id, quantity=int(ingredient_quantity), location=ingredient_location)
             elif confirm_location.upper() == "N":
                 print("\nReturning to the entering ingredient ID... ")
                 store_ingredient('2', reference_num, uid, iid=None)
-            print("Add successful!\n")
             print("Returning to the main menu...\n")
             main_menu(uid)
 

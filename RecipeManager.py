@@ -57,12 +57,12 @@ def register():
             main_menu(id)
         elif login_prompt.upper() == "N":
             print("Returning to the start menu...\n")
-            start()
+            return start()
 
     # If information is incorrect, user has the option to restart registration
     elif response.upper() == "N":
         print("We apologize for any inconvenience. Let's try again!")
-        register()
+        return register()
 
 
 def list_ingredient(uid, reference_num):
@@ -340,14 +340,14 @@ def start():
     # Otherwise, register the user
 
     if not id:
-        register()
+        return register()
     else:
         valid = login_user(id)
         if valid:
             return id
         else:
             print("Please log in with a valid ID")
-            start()
+            return start()
 
 
 def main_menu(uid):

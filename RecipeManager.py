@@ -52,7 +52,7 @@ def register():
 
         connect1.execute_query(q.insert_user, firstname=first_name, lastname=last_name)
         user_id = connect1.execute_query(q.select_user_id_kwargs, firstname=first_name, lastname=last_name)
-        id = user_id.fetchone()[0]  # After fetchone(), user_id is changed. Must store in a variable for reuse
+        id = user_id[0][0]
         login_prompt = input(
             "Thank you! Your new ID number is: %s. Please remember it for the next time you log in. Would you like to login? (Y/N)" % id)
         if login_prompt.upper() == "Y":
@@ -252,6 +252,7 @@ def make_recipe(uid, rid):
             # print("quantity ", x[1])
             connect1.execute_query(q.update_user_ingredients, quantity=quantity, uid=uid, iid=iid)
         # TODO: insert into dates made
+        connect1.execute_query(q.insert_date_made, uid=uid, rid=rid)
         return True
 
 def handle_command(num, uid):
@@ -313,11 +314,10 @@ def handle_command(num, uid):
 
                 elif confirm.upper() == 'N':
                     handle_command(num, uid)
-            if recipe_choice == '2':
+            elif recipe_action == '2':
                 # TODO: Wait for create_new_recipe() to finish before redirecting user
-                # create_or_edit_recipe(uid, recipe_id=recipe_choice)
-                pass
-            if recipe_choice == '3':
+                create_or_edit_recipe(uid, recipe_id=recipe_choice)
+            elif recipe_action == '3':
                 print("Going back...")
                 handle_command(num, uid)
 
@@ -331,7 +331,6 @@ def handle_command(num, uid):
         print("Invalid command")
 
 
-# TODO: Should add another option where they want to exit out of the program
 def start():
     """
     Runs when program is booted up.

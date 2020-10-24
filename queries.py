@@ -6,6 +6,13 @@ select_users_kwargs = """
     SELECT * FROM users
     WHERE users.uid = :uid;
 """
+
+select_user_id_kwargs = """
+    SELECT users.uid FROM users
+    WHERE users.firstname = :firstname
+    AND users.lastname = :lastname;
+"""
+
 select_recipes = """
     SELECT * FROM recipes;
 """

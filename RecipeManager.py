@@ -15,7 +15,7 @@ def input_int(message):
             return somein
         print("Was expecting an int or empty string")
         somein = input(message)
-    return somein
+    return int(somein)
 
 
 def login_user(id):
@@ -30,10 +30,7 @@ def login_user(id):
     """
 
     res = connect1.execute_query(q.check_user_exists, uid=id)
-    print(res[0][0])
-    if res[0][0] == False:
-        return False
-    return True
+    return res[0][0]
 
 
 def register():
@@ -341,21 +338,20 @@ def start():
         user id (int) that is used for database manipulation
     """
 
-    print("Hello! Welcome to Recipe Manager!")
-    id = input("Please log in with your ID number or press enter if you are a new user: ")
-
-    # If invalid input (not an integer or blank), loop until valid.
-    while not id.isdigit() and id != "":
-        id = input("Please enter a valid ID or press enter: ")
+    id = input_int("Please log in with your ID number or press enter if you are a new user: ")
 
     # Checks if user entered a valid integer and valid id that matches a registered user
     # Otherwise, register the user
-    if id.isdigit() and login_user(id) == True:
-        print(f"You are now logged in with ID {id}.\n")
-        return id
+
+    if not id:
+        register()
     else:
-        if id == "":
-            register()
+        valid = login_user(id)
+        if valid:
+            return id
+        else:
+            print("Please log in with a valid ID")
+            start()
 
 
 def main_menu(uid):
@@ -382,6 +378,7 @@ def main_menu(uid):
 
 if __name__ == "__main__":
     connect1 = db.Connection(DATABASE)
+    print("Hello! Welcome to Recipe Manager!")
     uid = start()
     main_menu(uid)
     print("Successfully logged out. Have a nice day!")

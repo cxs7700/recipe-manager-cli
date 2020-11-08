@@ -205,3 +205,59 @@ check_user_exists = """
 delete_steps_for_rec = """
     DELETE FROM steps WHERE rid = :rid;
 """
+
+random_timestamp = """
+INSERT INTO dates_made (date, uid, rid)
+VALUES (
+    current_timestamp +
+    random() * (timestamp '2000-01-01 00:00:00' -
+                timestamp '2020-11-08 00:00:00'),
+    :uid,
+    :rid);
+"""
+
+"""
+-- how many ingredients used total?
+SELECT req.iid, SUM(req.quantity)
+FROM requires req
+RIGHT JOIN recipes rec ON req.rid = rec.rid
+RIGHT JOIN dates_made dm on rec.rid = dm.rid
+GROUP BY req.iid;
+"""
+
+"""
+-- how many recipies were made
+SELECT rid, COUNT(rid)
+FROM dates_made
+GROUP BY rid;
+"""
+
+"""
+-- what can a user make?
+SELECT uid, rec.rid
+FROM users use, recipes rec
+WHERE
+      use.uid = :user
+      AND NOT EXISTS(
+        SELECT
+           req.rid,
+           req.iid,
+           req.quantity
+    FROM requires req
+    WHERE req.rid = rec.rid
+    AND NOT EXISTS(
+               select
+                      'x'
+               from user_ingredients ui
+               where ui.uid = use.uid
+                and ui.iid = req.iid
+                and ui.quantity >= req.quantity)
+    );
+"""
+
+"""
+-- who makes the most stuff?
+SELECT uid, rid, COUNT(rid)
+FROM dates_made
+GROUP BY uid, rid;
+"""

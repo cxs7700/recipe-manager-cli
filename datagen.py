@@ -48,13 +48,29 @@ def insert_steps(steps, connection):
         for i in range(len(steps[rid])):
             connection.execute_query(queries.insert_step, rid=rid, number=(i+1), step=steps[rid][i])
 
+def make_timestamps(numstamps, connection):
+    rids = connection.execute_query("""
+        SELECT rid FROM recipes;
+            """)
+    uids = connection.execute_query("""
+        SELECT uid FROM users;
+            """)
+    for _ in range(numstamps):
+        rrec = random.randrange(1, len(rids))
+        ruser = random.randrange(1, len(uids))
+        rrec = rids[rrec][0]
+        ruser = uids[ruser][0]
+        print("rid: %s, user: %s" % (rrec, ruser))
+        connection.execute_query(queries.random_timestamp, rid=rrec, uid=ruser)
+
 if __name__ == "__main__":
     connection = dbconnect.Connection(dbconnect.DATABASE)
-    requires = connection.execute_query(queries.select_requires) # ordered on rid
-    ingredients = connection.execute_query(queries.select_ingredients) # ordered on iid
-    requires = [i for i in requires]
-    print(len(requires))
-    ingredients = [i for i in ingredients]
-    steps = gen_data(requires, ingredients)
-    print(len(steps))
-    insert_steps(steps, connection)
+    # requires = connection.execute_query(queries.select_requires) # ordered on rid
+    # ingredients = connection.execute_query(queries.select_ingredients) # ordered on iid
+    # requires = [i for i in requires]
+    # print(len(requires))
+    # ingredients = [i for i in ingredients]
+    # steps = gen_data(requires, ingredients)
+    # print(len(steps))
+    # insert_steps(steps, connection)
+    make_timestamps(300, connection)

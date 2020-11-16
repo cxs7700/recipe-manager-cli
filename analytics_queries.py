@@ -1,18 +1,22 @@
 
 """
--- how many ingredients used total?
+-- top 10 most popular ingredients
 SELECT req.iid, SUM(req.quantity)
 FROM requires req
 RIGHT JOIN recipes rec ON req.rid = rec.rid
 RIGHT JOIN dates_made dm on rec.rid = dm.rid
-GROUP BY req.iid;
+WHERE req.iid IS NOT NULL
+GROUP BY req.iid
+LIMIT 10;
 """
 
 """
--- how many recipies were made
-SELECT rid, COUNT(rid)
+-- top 10 users of the database (by recipes made)
+SELECT uid, COUNT(rid) made
 FROM dates_made
-GROUP BY rid;
+GROUP BY uid
+ORDER BY made DESC
+LIMIT 10;
 """
 
 """

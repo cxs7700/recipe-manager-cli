@@ -68,28 +68,6 @@ ORDER BY used DESC;
 """
 
 """
--- ALL ingredients we don't have enough of
-SELECT
-       req.rid,
-       req.iid,
-       req.quantity
-FROM requires req
-WHERE req.rid IN (
-        SELECT DISTINCT req.rid
-        FROM requires req
-        RIGHT JOIN user_ingredients ui on req.iid = ui.iid
-    )
-AND NOT EXISTS(
-        select 'x'
-        from user_ingredients ui
-        where ui.uid = ?
-        and ui.iid = req.iid
-        and ui.quantity >= req.quantity
-    )
-ORDER BY req.rid, req.iid;
-"""
-
-"""
 -- recommend based on rname
 SELECT DISTINCT rname, rid
 FROM recipes,
@@ -101,4 +79,39 @@ FROM recipes,
         WHERE dm.uid = :uid
     ) AS parts
 WHERE rname LIKE '%' || parts.npart || '%';
+"""
+
+"""
+-- recipes user can almost make (how much is required, what's required)
+WITH rir (rid, iid, required) AS( -- rid, iid, how much some user needs to buy to fulfil required iid quantity
+    SELECT
+           req.rid,
+           req.iid,
+           -- find a quantity, if it exists, in user ingredients that is the same iid as the current req, and subtract the quantity
+           req.quantity - coalesce((SELECT quantity FROM user_ingredients WHERE uid = :uid AND iid = req.iid AND quantity >= 0), 0) AS required
+    FROM requires req
+    WHERE req.rid IN (
+            -- Find all recipes that have an ingredient that the user currently has
+            SELECT DISTINCT req.rid
+            FROM requires req
+            RIGHT JOIN user_ingredients ui on req.iid = ui.iid
+            WHERE ui.uid = :uid
+            AND ui.quantity > 0
+        )
+    ORDER BY req.rid, req.iid
+)
+SELECT
+       rir.rid,
+       rir.iid,
+       rir.required
+--        rir2.total
+FROM rir
+LEFT JOIN (
+        -- the total number of missing ingredients (in terms of quantity) this recipe requires to be able to be made
+        -- this is used to help order
+        SELECT rid, SUM(required) total FROM rir WHERE required > 0 GROUP BY rid
+    ) rir2
+ON rir.rid = rir2.rid
+WHERE rir.required > 0
+ORDER BY rir2.total, rir.rid, rir.iid;
 """

@@ -50,35 +50,34 @@ GROUP BY uid, rid;
 
 """
 -- recommended recipes based on used ingredients
+-- used represents the number of ingredients (and times) the user has used that the suggested recipe contains
 SELECT SUM(iur.used) used, iur.rid
 FROM(
         SELECT DISTINCT req.iid, COUNT(req.iid) used, req2.rid
         FROM requires req
-        RIGHT JOIN dates_made dm ON req.rid = dm.rid
-        RIGHT JOIN requires req2 ON req.iid = req2.iid
+        RIGHT JOIN dates_made dm ON req.rid = dm.rid -- recipes user has made before
+        RIGHT JOIN requires req2 ON req.iid = req2.iid -- all recipes that have common ingredients with recipes the user had made
         WHERE dm.uid = :uid
         GROUP BY req.iid, req2.rid
         ORDER BY used DESC
     ) AS iur -- Ingredients Used by Recipe
--- WHERE iur.rid NOT IN ( -- do we want to exclude recipes we've made before?
---     SELECT rid FROM dates_made WHERE uid = :uid
---     )
 GROUP BY iur.rid
 ORDER BY used DESC;
 """
 
 """
 -- recommend based on rname
-SELECT DISTINCT rname, rid
+SELECT rname, rid, COUNT(rname) matches
 FROM recipes,
      (
         SELECT DISTINCT regexp_split_to_table(rec.rname, E'\\s+') npart
         FROM recipes rec
-        RIGHT JOIN requires req ON req.rid = rec.rid
         RIGHT JOIN dates_made dm on rec.rid = dm.rid
         WHERE dm.uid = :uid
     ) AS parts
-WHERE rname LIKE '%' || parts.npart || '%';
+WHERE rname LIKE '%' || parts.npart || '%'
+GROUP BY rname, rid
+ORDER BY matches DESC;
 """
 
 """
@@ -113,5 +112,6 @@ LEFT JOIN (
     ) rir2
 ON rir.rid = rir2.rid
 WHERE rir.required > 0
+AND total < :tlimit
 ORDER BY rir2.total, rir.rid, rir.iid;
 """
